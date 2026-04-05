@@ -74,14 +74,23 @@
     }
     return fetch("admin_users.json", { cache: "no-store" })
       .then(function (r) {
-        if (!r.ok) throw new Error("Файл admin_users.json не найден");
+        if (!r.ok) throw new Error("NO_ADMIN_FILE");
         return r.json();
       })
       .then(function (users) {
         if (!Array.isArray(users) || users.length === 0) {
-          throw new Error("Список администраторов пуст");
+          throw new Error("EMPTY_ADMIN_LIST");
         }
         return users;
+      })
+      .catch(function () {
+        return Promise.reject(
+          new Error(
+            "Список админов недоступен. Для GitHub Pages: добавьте в репозиторий файл admin_users.json " +
+              "в корень сайта (рядом с index.html) и сделайте push, либо заполните массив FinTatAdminUsers в js/admin_users_data.js. " +
+              "Помните: в публичном репозитории эти данные будут видны всем."
+          )
+        );
       });
   }
 
