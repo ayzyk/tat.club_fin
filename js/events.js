@@ -677,6 +677,14 @@
     return null;
   }
 
+  /** iOS Safari: без playsinline видео уходит в системный полноэкранный плеер при воспроизведении */
+  function applyInlineFileVideoAttrs(el) {
+    if (!el || String(el.nodeName).toLowerCase() !== "video") return;
+    el.playsInline = true;
+    el.setAttribute("playsinline", "");
+    el.setAttribute("webkit-playsinline", "");
+  }
+
   function fillEventMediaSync(wrap, item, opts) {
     opts = opts || {};
     var isCover = opts.isCover;
@@ -707,7 +715,7 @@
       var video = document.createElement("video");
       video.src = item.src;
       video.controls = !isCover;
-      video.playsInline = true;
+      applyInlineFileVideoAttrs(video);
       if (isCover) video.muted = true;
       wrap.appendChild(video);
     } else if (item.src) {
@@ -747,7 +755,7 @@
               var v = document.createElement("video");
               v.src = url;
               v.controls = !opts.isCover;
-              v.playsInline = true;
+              applyInlineFileVideoAttrs(v);
               if (opts.isCover) v.muted = true;
               mediaWrap.appendChild(v);
               if (opts.isCover) {

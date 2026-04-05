@@ -107,10 +107,14 @@
           ? String(caption).trim()
           : "";
 
-      if (item.type === "video") {
+      var isVideoItem =
+        item.type === "video" ||
+        (item.type && String(item.type).toLowerCase() === "video");
+      if (isVideoItem) {
         var fileVideo = mediaWrap.querySelector("video");
         var embedFrame = mediaWrap.querySelector("iframe");
-        if (fileVideo && fileVideo.src && !embedFrame) {
+        /* Без проверки .src: в Safari blob/currentSrc иногда пусты до загрузки — иначе снова вешается лайтбокс */
+        if (fileVideo && !embedFrame) {
           fileVideo.controls = true;
           fileVideo.playsInline = true;
           fileVideo.setAttribute("playsinline", "");
