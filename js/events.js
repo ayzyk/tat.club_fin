@@ -98,6 +98,20 @@
     }
   }
 
+  function setEventsEmptyMessages() {
+    var admin = !!getSessionLogin();
+    if (eventsAlbumsEmpty) {
+      eventsAlbumsEmpty.textContent = admin
+        ? "Пока нет альбомов. Нажмите «Добавить альбом»."
+        : "Скоро здесь появятся наши материалы.";
+    }
+    if (eventsEmpty) {
+      eventsEmpty.textContent = admin
+        ? "В альбоме пока нет записей. Добавьте материалы кнопкой выше."
+        : "Скоро здесь появятся наши материалы.";
+    }
+  }
+
   function closeMobileNav() {
     var nav = document.querySelector(".nav");
     var toggle = document.querySelector(".nav-toggle");
@@ -996,9 +1010,22 @@
     });
   }
 
+  /* fixed внутри .section с overflow:hidden не на весь экран — переносим в body */
+  function syncEventAlbumPortal() {
+    if (!eventsOpenAlbum || !eventsLayout) return;
+    if (openEventAlbumId) {
+      if (eventsOpenAlbum.parentNode !== document.body) {
+        document.body.appendChild(eventsOpenAlbum);
+      }
+    } else if (eventsOpenAlbum.parentNode === document.body) {
+      eventsLayout.appendChild(eventsOpenAlbum);
+    }
+  }
+
   function renderEvents() {
     if (!eventsGrid || !eventsEmpty) return;
     syncEventsAdminChrome();
+    setEventsEmptyMessages();
     revokeEventUrls();
     document.body.classList.remove("album-view-open-events");
 
@@ -1034,97 +1061,101 @@
       return;
     }
 
-    var state = getEventsState();
-    var albums = state.albums.slice().reverse();
+    try {
+      var state = getEventsState();
+      var albums = state.albums.slice().reverse();
 
-    if (openEventAlbumId) {
-      var current = state.albums.find(function (a) {
-        return a.id === openEventAlbumId;
-      });
-      if (!current) {
-        openEventAlbumId = null;
-        renderEvents();
+      if (openEventAlbumId) {
+        var current = state.albums.find(function (a) {
+          return a.id === openEventAlbumId;
+        });
+        if (!current) {
+          openEventAlbumId = null;
+          renderEvents();
+          return;
+        }
+        eventsAlbumsView.hidden = true;
+        eventsOpenAlbum.hidden = false;
+        eventsAlbumsGrid.innerHTML = "";
+        if (eventsAlbumsEmpty) eventsAlbumsEmpty.hidden = true;
+
+        if (eventsDeleteOpenAlbumBtn) {
+          if (getSessionLogin()) {
+            eventsDeleteOpenAlbumBtn.hidden = false;
+            eventsDeleteOpenAlbumBtn.setAttribute("data-album-id", current.id);
+          } else {
+            eventsDeleteOpenAlbumBtn.hidden = true;
+            eventsDeleteOpenAlbumBtn.removeAttribute("data-album-id");
+          }
+        }
+
+        if (eventsOpenAlbumCover) {
+          eventsOpenAlbumCover.innerHTML = "";
+          var covItem = buildEventAlbumCoverMediaItem(current);
+          if (covItem) {
+            eventsOpenAlbumCover.hidden = false;
+            var covInner = document.createElement("div");
+            covInner.className = "gallery-open-album__cover-media";
+            eventsOpenAlbumCover.appendChild(covInner);
+            fillEventItemMedia(covInner, covItem, {}).then(function () {});
+          } else {
+            eventsOpenAlbumCover.hidden = true;
+          }
+        }
+
+        eventsGrid.innerHTML = "";
+        var items = current.items.slice().reverse();
+        eventsEmpty.hidden = items.length > 0;
+        var isAdmin = !!getSessionLogin();
+        Promise.all(
+          items.map(function (it) {
+            return buildEventCard(it, isAdmin, {
+              albumTitle: current.title,
+            });
+          })
+        ).then(function (cards) {
+          cards.forEach(function (c) {
+            eventsGrid.appendChild(c);
+          });
+        });
+        document.body.classList.add("album-view-open-events");
         return;
       }
-      eventsAlbumsView.hidden = true;
-      eventsOpenAlbum.hidden = false;
-      eventsAlbumsGrid.innerHTML = "";
-      if (eventsAlbumsEmpty) eventsAlbumsEmpty.hidden = true;
 
+      eventsAlbumsView.hidden = false;
+      eventsOpenAlbum.hidden = true;
       if (eventsDeleteOpenAlbumBtn) {
-        if (getSessionLogin()) {
-          eventsDeleteOpenAlbumBtn.hidden = false;
-          eventsDeleteOpenAlbumBtn.setAttribute("data-album-id", current.id);
-        } else {
-          eventsDeleteOpenAlbumBtn.hidden = true;
-          eventsDeleteOpenAlbumBtn.removeAttribute("data-album-id");
-        }
+        eventsDeleteOpenAlbumBtn.hidden = true;
+        eventsDeleteOpenAlbumBtn.removeAttribute("data-album-id");
       }
-
       if (eventsOpenAlbumCover) {
         eventsOpenAlbumCover.innerHTML = "";
-        var covItem = buildEventAlbumCoverMediaItem(current);
-        if (covItem) {
-          eventsOpenAlbumCover.hidden = false;
-          var covInner = document.createElement("div");
-          covInner.className = "gallery-open-album__cover-media";
-          eventsOpenAlbumCover.appendChild(covInner);
-          fillEventItemMedia(covInner, covItem, {}).then(function () {});
-        } else {
-          eventsOpenAlbumCover.hidden = true;
-        }
+        eventsOpenAlbumCover.hidden = true;
+      }
+      eventsGrid.innerHTML = "";
+      eventsAlbumsGrid.innerHTML = "";
+      if (eventsAlbumsEmpty) {
+        eventsAlbumsEmpty.hidden = albums.length > 0;
+      }
+      eventsEmpty.hidden = true;
+
+      if (albums.length === 0) {
+        return;
       }
 
-      eventsGrid.innerHTML = "";
-      var items = current.items.slice().reverse();
-      eventsEmpty.hidden = items.length > 0;
-      var isAdmin = !!getSessionLogin();
+      var isAdminAlbums = !!getSessionLogin();
       Promise.all(
-        items.map(function (it) {
-          return buildEventCard(it, isAdmin, {
-            albumTitle: current.title,
-          });
+        albums.map(function (a) {
+          return buildEventAlbumCard(a, isAdminAlbums);
         })
       ).then(function (cards) {
         cards.forEach(function (c) {
-          eventsGrid.appendChild(c);
+          eventsAlbumsGrid.appendChild(c);
         });
       });
-      document.body.classList.add("album-view-open-events");
-      return;
+    } finally {
+      syncEventAlbumPortal();
     }
-
-    eventsAlbumsView.hidden = false;
-    eventsOpenAlbum.hidden = true;
-    if (eventsDeleteOpenAlbumBtn) {
-      eventsDeleteOpenAlbumBtn.hidden = true;
-      eventsDeleteOpenAlbumBtn.removeAttribute("data-album-id");
-    }
-    if (eventsOpenAlbumCover) {
-      eventsOpenAlbumCover.innerHTML = "";
-      eventsOpenAlbumCover.hidden = true;
-    }
-    eventsGrid.innerHTML = "";
-    eventsAlbumsGrid.innerHTML = "";
-    if (eventsAlbumsEmpty) {
-      eventsAlbumsEmpty.hidden = albums.length > 0;
-    }
-    eventsEmpty.hidden = true;
-
-    if (albums.length === 0) {
-      return;
-    }
-
-    var isAdminAlbums = !!getSessionLogin();
-    Promise.all(
-      albums.map(function (a) {
-        return buildEventAlbumCard(a, isAdminAlbums);
-      })
-    ).then(function (cards) {
-      cards.forEach(function (c) {
-        eventsAlbumsGrid.appendChild(c);
-      });
-    });
   }
 
   function applyEventModalMode() {
@@ -1807,5 +1838,6 @@
   setEventDateDefault();
   setEventModalAlbumDateDefault();
   syncEventsAdminChrome();
+  setEventsEmptyMessages();
   renderEvents();
 })();
