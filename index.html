@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Татарский клуб Финансового университета при Правительстве Российской Федерации — объединение студентов и выпускников."
+    />
+    <title>Татарский клуб | Финансовый университет</title>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="img/favicon-32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="img/favicon-16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="img/apple-touch-icon.png"
+      sizes="180x180"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__inner">
+        <a class="brand" href="#">
+          <img
+            class="brand__logo"
+            src="img/logo.jpg"
+            width="56"
+            height="56"
+            alt="Татарский клуб Финансового университета"
+          />
+          <span class="brand__text">
+            <span class="brand__title">Татарский клуб</span>
+            <span class="brand__subtitle">Финансовый университет</span>
+          </span>
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Открыть меню"
+        >
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <nav class="nav" id="site-nav" aria-label="Основная навигация">
+          <ul class="nav__list">
+            <li><a href="#about">О нас</a></li>
+            <li><a href="#events">Мероприятия</a></li>
+            <li><a href="#contacts">Контакты</a></li>
+            <li>
+              <a href="#" class="js-open-admin">Админ-панель</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero__pattern" aria-hidden="true"></div>
+        <div class="container hero__content">
+          <div class="hero__badge">При Правительстве РФ</div>
+          <h1 class="hero__title">
+            Татарское землячество<br />
+            <span class="hero__accent">Финансового университета</span>
+          </h1>
+          <p class="hero__lead">
+            Сохраняем традиции, поддерживаем друг друга в учёбе и жизни,
+            проводим праздники и встречи для студентов и выпускников.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#contacts">Связаться</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--tint" id="about">
+        <div class="container">
+          <div class="about-grid">
+            <div class="about-grid__visual">
+              <img
+                class="about-grid__logo"
+                src="img/logo.jpg"
+                width="280"
+                height="280"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="about-grid__text">
+              <h2 class="section__title">О нас</h2>
+              <p class="section__lead">
+                Мы — сообщество татар и всех, кому близка татарская культура,
+                в стенах главного экономического вуза страны.
+              </p>
+              <ul class="feature-list">
+                <li>
+                  <strong>Культура и язык</strong> — Сабантуй, Гыйт, музыка,
+                  знакомство с обычаями и историей.
+                </li>
+                <li>
+                  <strong>Академическая поддержка</strong> — Обмен опытом,
+                  наставничество, совместная подготовка.
+                </li>
+                <li>
+                  <strong>Сеть выпускников</strong> — Контакты в финансовой
+                  сфере и государственном управлении.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section--hero-surface-group">
+      <section class="section section--hero-surface" id="events">
+        <div class="container">
+          <h2 class="section__title section__title--center">Мероприятия</h2>
+          <div class="events-add-wrap">
+            <button
+              type="button"
+              class="events-add"
+              id="events-open-add"
+              aria-label="Добавить альбом"
+            >
+              <span class="events-add__plus" aria-hidden="true">+</span>
+              <span class="events-add__label">Добавить альбом</span>
+            </button>
+          </div>
+          <div class="gallery-layout" id="events-layout">
+            <div class="events-albums-view" id="events-albums-view">
+              <div
+                class="gallery-albums-grid"
+                id="events-albums-grid"
+              ></div>
+              <p class="events-empty" id="events-albums-empty" hidden>
+                Пока нет альбомов.
+              </p>
+            </div>
+            <div class="gallery-open-album" id="events-open-album" hidden>
+              <div class="gallery-open-album__toolbar">
+                <button
+                  type="button"
+                  class="btn btn--ghost gallery-open-album__back"
+                  id="events-back-albums"
+                  aria-label="Назад"
+                >
+                  ← Назад
+                </button>
+                <button
+                  type="button"
+                  class="btn btn--small btn--danger gallery-open-album__del-album"
+                  id="events-delete-open-album"
+                  hidden
+                >
+                  Удалить альбом
+                </button>
+              </div>
+              <div
+                class="gallery-open-album__cover"
+                id="events-open-album-cover"
+                hidden
+              ></div>
+              <div
+                class="gallery-open-album__body"
+                id="events-open-album-body"
+                hidden
+              >
+                <h3
+                  class="gallery-open-album__title"
+                  id="events-open-album-title"
+                ></h3>
+                <time
+                  class="gallery-open-album__date"
+                  id="events-open-album-date"
+                  hidden
+                ></time>
+              </div>
+              <p class="gallery-open-album__hint">
+                Материалы альбома видны только здесь. На главной в разделе
+                «Мероприятия» отображается обложка альбома.
+              </p>
+              <div class="events-add-wrap gallery-open-album__add-wrap">
+                <button
+                  type="button"
+                  class="events-add events-add--inner"
+                  id="events-open-add-inner"
+                  aria-label="Добавить фото или видео в альбом"
+                >
+                  <span class="events-add__plus" aria-hidden="true">+</span>
+                  <span class="events-add__label"
+                    >Добавить фото или видео</span
+                  >
+                </button>
+              </div>
+              <div class="events-grid" id="events-grid"></div>
+              <p class="events-empty" id="events-empty" hidden>
+                В этом альбоме пока нет мероприятий.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--hero-surface" id="contacts">
+        <div class="container">
+          <h2 class="section__title section__title--center">Контакты</h2>
+          <p class="section__intro section__intro--center">
+            Подписывайтесь на каналы и вступайте в чат — там анонсы и ответы на
+            вопросы.
+          </p>
+          <div class="contacts">
+            <div class="contacts__block">
+              <h3 class="contacts__label">Соцсети</h3>
+              <ul class="social-links">
+                <li>
+                  <a
+                    href="https://www.instagram.com/fin.tat.club?igsh=cDZqYm9yeHN0ejk="
+                    class="social-links__item"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="img/Instagram_logo.svg"
+                      alt=""
+                      class="social-links__icon"
+                      width="24"
+                      height="24"
+                    />
+                    <span>Instagram</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://t.me/fin_tat"
+                    class="social-links__item"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="img/Telegram_logo.svg.png"
+                      alt=""
+                      class="social-links__icon"
+                      width="24"
+                      height="24"
+                    />
+                    <span>Telegram</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://vk.me/join/rI5LL/ez3CDupRpviO_HnAJwEP68QQZztWQ="
+                    class="social-links__item"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="img/VK_Compact_Logo.svg.png"
+                      alt=""
+                      class="social-links__icon"
+                      width="24"
+                      height="24"
+                    />
+                    <span>ВКонтакте</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="contacts__block">
+              <h3 class="contacts__label">Руководство в Telegram</h3>
+              <p>
+                <strong class="contacts__role">Председатель:</strong>
+                <a
+                  href="https://t.me/KhasiDil"
+                  class="link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >@KhasiDil</a
+                >
+              </p>
+              <p>
+                <strong class="contacts__role">Заместители:</strong><br />
+                <a
+                  href="https://t.me/sharyafetdin"
+                  class="link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >@sharyafetdin</a
+                >,
+                <a
+                  href="https://t.me/niyazZzik"
+                  class="link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >@niyazZzik</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      </div>
+    </main>
+
+    <div
+      class="event-modal"
+      id="event-modal"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="event-modal-title"
+    >
+      <div
+        class="event-modal__backdrop"
+        data-event-close
+        tabindex="-1"
+      ></div>
+      <div class="event-modal__dialog">
+        <button
+          type="button"
+          class="event-modal__close"
+          data-event-close
+          aria-label="Закрыть"
+        >
+          ×
+        </button>
+        <h2 class="event-modal__title" id="event-modal-title">
+          Новое мероприятие
+        </h2>
+        <form class="admin-form" id="event-add-form">
+          <div class="event-modal__section" id="event-modal-section-pick-album">
+            <label class="admin-field">
+              <span class="admin-field__label">Альбом</span>
+              <select
+                class="admin-select"
+                id="event-modal-album-select"
+                aria-label="Альбом мероприятий"
+              ></select>
+            </label>
+          </div>
+          <div class="event-modal__section" id="event-modal-section-album-fields">
+            <label class="admin-field" id="event-modal-wrap-album-new">
+              <span class="admin-field__label" id="event-modal-label-album-new"
+                >Новый альбом</span
+              >
+              <input
+                type="text"
+                id="event-modal-album-new"
+                maxlength="120"
+                autocomplete="off"
+                placeholder="Если нужен новый альбом — введите название"
+              />
+            </label>
+            <label class="admin-field">
+              <span
+                class="admin-field__label"
+                id="event-modal-label-album-date"
+                >Дата альбома (если создаёте новый)</span
+              >
+              <input type="date" id="event-modal-album-date" />
+            </label>
+            <label class="admin-field">
+              <span
+                class="admin-field__label"
+                id="event-modal-label-album-cover"
+                >Фото обложки альбома (если создаёте новый)</span
+              >
+              <input
+                type="file"
+                id="event-modal-album-cover"
+                accept="image/*"
+              />
+            </label>
+          </div>
+          <div class="event-modal__section" id="event-modal-section-activity">
+            <label class="admin-field">
+              <span class="admin-field__label">Название записи</span>
+              <input
+                type="text"
+                id="event-title"
+                name="title"
+                required
+                maxlength="200"
+                autocomplete="off"
+                placeholder="Например: Каток, Сабантуй…"
+              />
+            </label>
+            <label class="admin-field">
+              <span class="admin-field__label">Описание (необязательно)</span>
+              <textarea
+                id="event-description"
+                name="description"
+                rows="4"
+                maxlength="2000"
+                placeholder="Подробности, ссылки, заметки"
+              ></textarea>
+            </label>
+            <label class="admin-field">
+              <span class="admin-field__label">Дата</span>
+              <input type="date" id="event-date" name="eventDate" />
+            </label>
+            <fieldset class="admin-fieldset">
+              <legend>Медиа</legend>
+              <label class="admin-radio">
+                <input type="radio" name="eventMediaType" value="image" checked />
+                Фото
+              </label>
+              <label class="admin-radio">
+                <input type="radio" name="eventMediaType" value="video" />
+                Видео
+              </label>
+            </fieldset>
+            <label class="admin-field event-field-file">
+              <span class="admin-field__label"
+                >Файл с устройства (фото или видео, хранится в браузере)</span
+              >
+              <input type="file" id="event-file" accept="image/*" />
+            </label>
+            <label class="admin-field">
+              <span class="admin-field__label">Или ссылка</span>
+              <input
+                type="url"
+                id="event-url"
+                placeholder="https://…"
+              />
+            </label>
+            <div class="image-focal-editor" id="event-image-focal-wrap" hidden>
+              <span class="admin-field__label"
+                >Положение фото в рамке (перетащите)</span
+              >
+              <div
+                class="image-focal-editor__frame"
+                id="event-image-focal-frame"
+                role="img"
+                aria-label="Кадрирование: перетащите изображение"
+              >
+                <img
+                  class="image-focal-editor__img"
+                  id="event-image-focal-img"
+                  alt=""
+                />
+              </div>
+              <button
+                type="button"
+                class="btn btn--ghost-small"
+                id="event-image-focal-reset"
+              >
+                По центру
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn--primary admin-submit" id="event-modal-submit">
+            Опубликовать
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div
+      class="admin-modal"
+      id="admin-modal"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="admin-modal-title"
+    >
+      <div
+        class="admin-modal__backdrop"
+        data-admin-close
+        tabindex="-1"
+      ></div>
+      <div class="admin-modal__dialog">
+        <button
+          type="button"
+          class="admin-modal__close"
+          data-admin-close
+          aria-label="Закрыть"
+        >
+          ×
+        </button>
+        <h2 class="admin-modal__title" id="admin-modal-title">
+          Админ-панель
+        </h2>
+
+        <div id="admin-login-view">
+          <form class="admin-form" id="admin-login-form" autocomplete="on">
+            <label class="admin-field">
+              <span class="admin-field__label">Логин</span>
+              <input
+                type="text"
+                name="login"
+                required
+                autocomplete="username"
+              />
+            </label>
+            <label class="admin-field">
+              <span class="admin-field__label">Пароль</span>
+              <input
+                type="password"
+                name="password"
+                required
+                autocomplete="current-password"
+              />
+            </label>
+            <p class="admin-error" id="admin-login-error" hidden></p>
+            <button type="submit" class="btn btn--primary admin-submit">
+              Войти
+            </button>
+          </form>
+        </div>
+
+        <div id="admin-panel-view" hidden>
+          <p class="admin-session">
+            Вы вошли как <strong id="admin-current-login"></strong>
+            <button type="button" class="btn btn--ghost-small" id="admin-logout">
+              Выйти
+            </button>
+          </p>
+          <p class="admin-modal__note">
+            Раздел «Галерея» на сайте отключён. Альбомы и материалы
+            мероприятий добавляются в блоке «Мероприятия» на главной (кнопки
+            «Добавить альбом» / «Добавить фото или видео»). Для входа откройте
+            сайт через локальный сервер, если используете admin_users.json.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="footer__brand">
+          <img
+            src="img/logo.jpg"
+            width="40"
+            height="40"
+            alt=""
+            loading="lazy"
+          />
+          <p class="footer__meta">
+            © <span id="year"></span> Татарский клуб · Финансовый университет
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/idb-media.js"></script>
+    <script src="js/image-focal.js"></script>
+    <script src="js/media-lightbox.js"></script>
+    <script src="js/admin_users_data.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/events.js"></script>
+  </body>
+</html>
