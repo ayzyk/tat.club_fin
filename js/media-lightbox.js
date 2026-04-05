@@ -93,7 +93,9 @@
     close: close,
 
     /**
-     * Клик по превью в карточке альбома (галерея / мероприятия): полный экран.
+     * Клик по превью в карточке альбома: фото — лайтбокс; загруженное видео (файл) —
+     * только встроенный плеер, полный экран по желанию через контролы браузера;
+     * встраиваемое видео (YouTube и т.д.) — лайтбокс.
      */
     bindCardMedia: function (mediaWrap, item, caption) {
       if (!mediaWrap || !item) return;
@@ -104,6 +106,18 @@
         caption != null && String(caption).trim()
           ? String(caption).trim()
           : "";
+
+      if (item.type === "video") {
+        var fileVideo = mediaWrap.querySelector("video");
+        var embedFrame = mediaWrap.querySelector("iframe");
+        if (fileVideo && fileVideo.src && !embedFrame) {
+          fileVideo.controls = true;
+          fileVideo.playsInline = true;
+          fileVideo.setAttribute("playsinline", "");
+          fileVideo.setAttribute("webkit-playsinline", "");
+          return;
+        }
+      }
 
       mediaWrap.classList.add("album-media--zoomable");
       mediaWrap.setAttribute("role", "button");
@@ -126,21 +140,14 @@
         if (e && isFooterClick(e.target)) return;
 
         var img = mediaWrap.querySelector("img");
-        var video = mediaWrap.querySelector("video");
         var iframe = mediaWrap.querySelector("iframe");
 
         if (item.type === "image" && img && img.src) {
           lb.openImage(img.src, cap);
           return;
         }
-        if (item.type === "video") {
-          if (video && video.src) {
-            lb.openVideo(video.src, cap);
-            return;
-          }
-          if (iframe && iframe.src) {
-            lb.openEmbed(iframe.src, cap);
-          }
+        if (item.type === "video" && iframe && iframe.src) {
+          lb.openEmbed(iframe.src, cap);
         }
       }
 
