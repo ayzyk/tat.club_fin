@@ -1274,6 +1274,13 @@ body.album-view-open-events {
   overflow: hidden;
 }
 
+/* Иначе блок «Контакты» из main может визуально наезжать на карточки (порядок слоёв в Safari) */
+body.album-view-open-events > main,
+body.album-view-open-events > footer.footer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 #gallery-open-album:not([hidden]),
 #events-open-album:not([hidden]) {
   position: fixed;
@@ -1282,7 +1289,9 @@ body.album-view-open-events {
   max-width: 100vw;
   min-height: 100vh;
   min-height: 100dvh;
-  z-index: 280;
+  /* Выше шапки (100) и модалок (~220), ниже лайтбокса (5000) */
+  z-index: 4500;
+  isolation: isolate;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;

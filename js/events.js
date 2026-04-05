@@ -19,7 +19,6 @@
   var eventsGrid = document.getElementById("events-grid");
   var eventsEmpty = document.getElementById("events-empty");
   var eventFile = document.getElementById("event-file");
-  var eventUrl = document.getElementById("event-url");
   var eventDateInput = document.getElementById("event-date");
   var eventModalAlbumSelect = document.getElementById(
     "event-modal-album-select"
@@ -224,29 +223,10 @@
     }
 
     var file = eventFile && eventFile.files[0];
-    var urlStr = (eventUrl && eventUrl.value.trim()) || "";
 
     if (file && file.type.startsWith("image/")) {
       eventFocalPreviewUrl = URL.createObjectURL(file);
       showUrl(eventFocalPreviewUrl, { x: 50, y: 50 });
-      return;
-    }
-
-    if (urlStr) {
-      var initU = { x: 50, y: 50 };
-      if (eventEditItemId) {
-        var locU = findEventItemState(eventEditItemId);
-        var itu = locU && locU.item;
-        if (
-          itu &&
-          itu.type === "image" &&
-          itu.src === urlStr &&
-          !itu.mediaKey
-        ) {
-          initU = window.FinTatImageFocal.getXY(itu);
-        }
-      }
-      showUrl(urlStr, initU);
       return;
     }
 
@@ -299,7 +279,6 @@
     } else {
       if (imgR) imgR.checked = true;
     }
-    if (eventUrl) eventUrl.value = it.mediaKey ? "" : it.src || "";
     if (eventFile) eventFile.value = "";
     syncEventMediaFields();
     setTimeout(function () {
@@ -1315,11 +1294,6 @@
       var fileWrap = eventFile.closest(".event-field-file");
       if (fileWrap) fileWrap.style.opacity = "1";
     }
-    if (eventUrl) {
-      eventUrl.placeholder = isVideo
-        ? "Или ссылка: YouTube, VK, прямой .mp4…"
-        : "Или ссылка на изображение";
-    }
     refreshEventFocalEditor();
   }
 
@@ -1363,9 +1337,6 @@
       });
     if (eventFile) {
       eventFile.addEventListener("change", refreshEventFocalEditor);
-    }
-    if (eventUrl) {
-      eventUrl.addEventListener("input", refreshEventFocalEditor);
     }
     if (eventFocalReset) {
       eventFocalReset.addEventListener("click", function () {
@@ -1459,7 +1430,6 @@
           'input[name="eventMediaType"]:checked'
         );
         var evEdMediaType = evEdTypeInput ? evEdTypeInput.value : "image";
-        var evEdUrl = (eventUrl && eventUrl.value.trim()) || "";
         var evEdFile = eventFile && eventFile.files[0];
         var evEdPub = readDateInput(eventDateInput);
         var stEvIt = getEventsState();
@@ -1469,9 +1439,9 @@
           return;
         }
         var itEvEd = locEvEd.item;
-        if (itEvEd.type !== evEdMediaType && !evEdFile && !evEdUrl) {
+        if (itEvEd.type !== evEdMediaType && !evEdFile) {
           alert(
-            "Чтобы сменить тип фото/видео, загрузите новый файл или укажите ссылку."
+            "Чтобы сменить тип фото/видео, загрузите новый файл."
           );
           return;
         }
@@ -1501,7 +1471,7 @@
           closeEventModal();
         }
 
-        if (!evEdFile && !evEdUrl) {
+        if (!evEdFile) {
           itEvEd.title = evEdTitle;
           itEvEd.description = evEdDesc;
           itEvEd.publishedDate = evEdPub || null;
@@ -1560,31 +1530,6 @@
             });
           return;
         }
-
-        if (evEdMediaType === "video" && !evEdUrl) {
-          alert("Укажите ссылку на видео или выберите файл.");
-          return;
-        }
-        if (evEdMediaType === "image" && !evEdUrl) {
-          alert("Укажите ссылку на фото или выберите файл.");
-          return;
-        }
-        var oldEvMk = itEvEd.mediaKey;
-        itEvEd.mediaKey = null;
-        itEvEd.src = evEdUrl;
-        itEvEd.type = evEdMediaType;
-        itEvEd.title = evEdTitle;
-        itEvEd.description = evEdDesc;
-        itEvEd.publishedDate = evEdPub || null;
-        applyEventEditedFocal();
-        if (oldEvMk && idbOk()) {
-          FinTatIdb.deleteBlob(oldEvMk)
-            .then(finishEventItemEdit)
-            .catch(finishEventItemEdit);
-        } else {
-          finishEventItemEdit();
-        }
-        return;
       }
 
       if (eventModalAlbumOnly) {
@@ -1667,7 +1612,6 @@
         'input[name="eventMediaType"]:checked'
       );
       var mediaType = typeInput ? typeInput.value : "image";
-      var url = (eventUrl && eventUrl.value.trim()) || "";
       var file = eventFile && eventFile.files[0];
       var eventPubDate = readDateInput(eventDateInput);
 
@@ -1710,9 +1654,7 @@
               return;
             }
             if (file.size > MAX_IMAGE_FILE) {
-              alert(
-                "Фото больше 50 МБ. Уменьшите файл или вставьте ссылку."
-              );
+              alert("Фото больше 50 МБ. Уменьшите файл.");
               return;
             }
           } else {
@@ -1725,7 +1667,7 @@
             }
             if (file.size > MAX_VIDEO_FILE) {
               alert(
-                "Видео больше 200 МБ — браузер может не сохранить. Сожмите ролик или вставьте ссылку (YouTube и др.)."
+                "Видео больше 200 МБ — браузер может не сохранить. Сожмите ролик."
               );
               return;
             }
@@ -1742,17 +1684,12 @@
           return;
         }
 
-        if (mediaType === "video" && !url) {
-          alert("Выберите видеофайл с устройства или укажите ссылку.");
-          return;
-        }
-
-        if (mediaType === "image" && !url) {
-          alert("Выберите фото с устройства или укажите ссылку.");
-          return;
-        }
-
-        pushEventRecord({ src: url, mediaKey: null });
+        alert(
+          mediaType === "video"
+            ? "Выберите видеофайл с устройства."
+            : "Выберите фото с устройства."
+        );
+        return;
       }
 
       if (newName) {
