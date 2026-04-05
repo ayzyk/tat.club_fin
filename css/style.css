@@ -697,6 +697,11 @@ a:hover {
   margin-bottom: 2rem;
 }
 
+/* Иначе display:flex перебивает атрибут hidden (кнопки «Добавить альбом» для гостей) */
+.events-add-wrap[hidden] {
+  display: none !important;
+}
+
 .events-add {
   display: flex;
   flex-direction: column;
