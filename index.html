@@ -134,7 +134,7 @@
       <section class="section section--hero-surface" id="events">
         <div class="container">
           <h2 class="section__title section__title--center">Мероприятия</h2>
-          <div class="events-add-wrap">
+          <div class="events-add-wrap" id="events-add-wrap-outer" hidden>
             <button
               type="button"
               class="events-add"
@@ -198,7 +198,11 @@
                 Материалы альбома видны только здесь. На главной в разделе
                 «Мероприятия» отображается обложка альбома.
               </p>
-              <div class="events-add-wrap gallery-open-album__add-wrap">
+              <div
+                class="events-add-wrap gallery-open-album__add-wrap"
+                id="events-add-wrap-inner"
+                hidden
+              >
                 <button
                   type="button"
                   class="events-add events-add--inner"
